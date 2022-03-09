@@ -17,6 +17,12 @@ class MyRoot(BoxLayout):
         # TypeCasting to str required to avoid an error
         self.random_label.text = str(random.randint(0, 2000))
 
+    def get_input(self, v_input):
+        print(f'text input is from self: {self.txt_inpt}')
+        print(f'text input is from var: {v_input}')
+        print(f'text input text is from self: {self.txt_inpt.text}')
+        print(f'text input text is from var: {v_input.text}')
+
 
 testApp = Main()
 testApp.run()

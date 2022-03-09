@@ -1,6 +1,9 @@
+#:kivy 2.1.0
+
 <MyRoot>:
     # Link the object with the uid "random_label" to "random_label" from the "main.py"
     random_label: random_label
+    txt_inpt: txt_inpt
     # The BoxLayout inside the "MyRoot" class will be vertically oriented
     # and have two labels and one button
     # This format avoid the declaration inside the python file
@@ -17,7 +20,18 @@
             font_size: 30
 
         Button:
+            id: f_but
             text: "Generate random number"
             font_size: 15
             # Event managing
             on_press: root.generate_number()
+
+        TextInput:
+            id: txt_inpt
+            text: f_but.state
+
+        Button:
+            text: "Get input text"
+            font_size: 15
+            # Event managing
+            on_press: root.get_input(txt_inpt)
