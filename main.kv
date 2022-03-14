@@ -1,14 +1,11 @@
 #:kivy 2.1.0
 
 <MyRoot>:
-    # Link the object with the uid "random_label" to "random_label" from the "main.py"
+    user_name_input: user_name_input
     hidden_word: hidden_word
-    guess_inpt: guess_inpt
-    # The BoxLayout inside the "MyRoot" class will be vertically oriented
-    # and have two labels and one button
-    # This format avoid the declaration inside the python file
     BoxLayout:
         orientation: "vertical"
+        id: layout
         Label:
             text: "Hanged-man game"
             font_size: 30
@@ -19,18 +16,43 @@
             text: "_"
             font_size: 30
 
-        Button:
-            id: start_game_button
-            text: "Start game"
-            font_size: 15
-            # Event managing
-            on_press: root.ask_user_name()
-
         TextInput:
-            id: guess_inpt
+            name: "userNameInput"
+            id: user_name_input
 
         Button:
+            name: "userNameSubmit"
             text: "Submit"
             font_size: 15
             # Event managing
-            on_press: root.user_input(guess_inpt)
+            on_press: root.get_user_name(user_name_input)
+            on_release: root.hide_widget(self)
+        
+        TextInput:
+            name: "guessInput"
+            id: guess_input
+            opacity: 0
+            disabled: True
+            height: 0
+            size_hint_y: None
+
+        Button:
+            name: "guessSubmit"
+            text: "Submit"
+            font_size: 15
+            opacity: 0
+            disabled: True
+            height: 0
+            size_hint_y: None
+            # Event managing
+            # on_press: root.get_user_name(user_name_input)
+            # on_release: root.hide_widget(self)
+
+#:import Factory kivy.factory.Factory
+<AskUserName@Popup>:
+    auto_dismiss: False
+
+    Button:
+        text: "Submit"
+        on_press: root.user_input(user_name_input)
+        on_release: root.dismiss()
