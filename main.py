@@ -14,7 +14,8 @@ class Main(App):
 
 @dataclass
 class MyRoot(BoxLayout):
-    hanged_man_game = HangedManGame()
+    hanged_man_game = None
+    player_name = None
     widgets: dict = None
     default_button_style: dict = None
     default_input_style: dict = None
@@ -31,10 +32,14 @@ class MyRoot(BoxLayout):
         }
         
     def start_game(self):
+        self.hanged_man_game = HangedManGame()
+        self.hanged_man_game.player = self.player_name
         self.hidden_word.text = self.hanged_man_game.word_hidden
         self.show_widget(self.guess_submit)
         self.show_widget(self.guess_input)
         self.show_widget(self.log_label_id)
+        self.hide_widget(self.new_game)
+        self.guess_input.text = ""
         self.log_label_id.text = f"You have {self.hanged_man_game.round_to_play} chances"
 
     def get_user_name(self, user_name, button_submit):
@@ -42,33 +47,45 @@ class MyRoot(BoxLayout):
             return
         self.hide_widget(user_name)
         self.hide_widget(button_submit)
-        self.hanged_man_game.player = str(user_name.text).capitalize()
+        self.player_name = str(user_name.text).capitalize()
         self.start_game()
 
     def manage_guess(self, guess):
         guess = str(guess.text)
+        log_text = ""
         if len(guess) == 1:
             result = self.hanged_man_game.manage_letter(guess)
-            log_text = ""
-            if result is None:
-                log_text = "Put a correct letter."
-            if result:
-                log_text = "Correct letter !"
-            else:
-                log_text = "Incorrect letter !"
-            self.log_label_id.text = f"{log_text} You have {self.hanged_man_game.round_to_play} chances. \n You have proposed {self.hanged_man_game.letters_played}"
-            self.guess_input.text = ""
-            self.hidden_word.text = self.hanged_man_game.word_hidden
-            return
-        
-        if len(guess) > 1:
+            match result:
+                case None:
+                    log_text = "Put a correct letter."
+                case True:
+                    log_text = "Correct letter !"
+                case False:
+                    log_text = "Incorrect letter !"
+
+        elif len(guess) > 1:
             result = self.hanged_man_game.guess_word(guess)
             if result:
                 self.log_label_id.text = f"Congratulations ! You found the correct word !"
                 self.hidden_word.text = self.hanged_man_game.word_to_guess
+                self.hide_widget(self.guess_submit)
+                self.hide_widget(self.guess_input)
+                self.show_widget(self.new_game)
+                return
             else:
-                self.log_label_id.text = f"You didn't find the word... try again, or put a letter. You have {self.hanged_man_game.round_to_play} chances"
-            return
+                log_text = "You didn't find the word... try again, or put a letter."
+        
+        if self.hanged_man_game.round_to_play > 0:
+            self.log_label_id.text = f"{log_text} You have {self.hanged_man_game.round_to_play} chances. \n You have proposed {self.hanged_man_game.letters_played}"
+            self.guess_input.text = ""
+            self.guess_input.focus = True
+            self.hidden_word.text = self.hanged_man_game.word_hidden
+        else:
+            self.log_label_id.text = f"No more chances..."
+            self.hidden_word.text = self.hanged_man_game.word_to_guess
+            self.hide_widget(self.guess_submit)
+            self.hide_widget(self.guess_input)
+            self.show_widget(self.new_game)
 
     def hide_widget(self, widget):
         widget_attributes = {

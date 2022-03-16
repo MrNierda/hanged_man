@@ -42,13 +42,14 @@ class HangedManGame():
         return word_hidden
 
     def guess_word(self, proposed_word):
-        return proposed_word == self.word_to_guess
+        good_guess = proposed_word == self.word_to_guess
+        if not good_guess:
+            self.round_to_play -= 1
+        return good_guess
 
     def manage_letter(self, letter):
         if not letter.isalpha():
             return None
-
-        self.round_to_play -= 1
 
         self.letters_played.append(letter)
 
@@ -63,6 +64,7 @@ class HangedManGame():
 
             return True
         else:
+            self.round_to_play -= 1
             return False
 
     def save_scores(self, player_name, score):

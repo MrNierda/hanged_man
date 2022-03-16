@@ -7,6 +7,7 @@
     guess_input: guess_input
     guess_submit: guess_submit
     log_label_id: log_label_id
+    new_game: new_game
     BoxLayout:
         orientation: "vertical"
         id: layout
@@ -27,11 +28,13 @@
             disabled: True
             height: 0
             size_hint_y: None
+            halign: 'center'
 
         TextInput:
             name: "userNameInput"
             id: user_name_input
             multiline: False
+            on_text_validate: root.get_user_name(self, user_name_submit)
 
         Button:
             name: "userNameSubmit"
@@ -49,6 +52,8 @@
             height: 0
             size_hint_y: None
             multiline: False
+            text_validate_unfocus: False
+            on_text_validate: root.manage_guess(self)
 
         Button:
             name: "guessSubmit"
@@ -60,6 +65,17 @@
             height: 0
             size_hint_y: None
             on_press: root.manage_guess(guess_input)
+
+        Button:
+            name: "newGame"
+            id: new_game
+            text: "New game"
+            font_size: 15
+            opacity: 0
+            disabled: True
+            height: 0
+            size_hint_y: None
+            on_press: root.start_game()
 
 #:import Factory kivy.factory.Factory
 <AskUserName@Popup>:
