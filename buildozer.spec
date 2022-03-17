@@ -1,13 +1,13 @@
 [app]
 
 # (str) Title of your application
-title = My Application (test)
+title = Hanged Man
 
 # (str) Package name
-package.name = myapp
+package.name = hangedman
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.test
+package.domain = hangedman.test
 
 # (str) Source code where the main.py live
 source.dir = .

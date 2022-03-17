@@ -15,7 +15,6 @@ class Main(App):
 @dataclass
 class MyRoot(BoxLayout):
     hanged_man_game = None
-    player_name = None
     widgets: dict = None
     default_button_style: dict = None
     default_input_style: dict = None
@@ -23,7 +22,7 @@ class MyRoot(BoxLayout):
     def __init__(self):
         super(MyRoot, self).__init__()
         self.widgets = {}
-        self.hidden_word.text = "First give your name"
+        self.hidden_word.text = "Welcome !"
         self.default_button_style = self.default_input_style = {
             "opacity": 1.0,
             "disabled": False,
@@ -33,7 +32,6 @@ class MyRoot(BoxLayout):
         
     def start_game(self):
         self.hanged_man_game = HangedManGame()
-        self.hanged_man_game.player = self.player_name
         self.hidden_word.text = self.hanged_man_game.word_hidden
         self.show_widget(self.guess_submit)
         self.show_widget(self.guess_input)
@@ -42,26 +40,17 @@ class MyRoot(BoxLayout):
         self.guess_input.text = ""
         self.log_label_id.text = f"You have {self.hanged_man_game.round_to_play} chances"
 
-    def get_user_name(self, user_name, button_submit):
-        if str(user_name.text) == "":
-            return
-        self.hide_widget(user_name)
-        self.hide_widget(button_submit)
-        self.player_name = str(user_name.text).capitalize()
-        self.start_game()
-
     def manage_guess(self, guess):
         guess = str(guess.text)
         log_text = ""
         if len(guess) == 1:
-            result = self.hanged_man_game.manage_letter(guess)
-            match result:
-                case None:
-                    log_text = "Put a correct letter."
-                case True:
-                    log_text = "Correct letter !"
-                case False:
-                    log_text = "Incorrect letter !"
+            result = self.hanged_man_game.guess_letter(guess)
+            if result is None:
+                log_text = "Put a correct letter."
+            elif result:
+                log_text = "Correct letter !"
+            else:
+                log_text = "Incorrect letter !"
 
         elif len(guess) > 1:
             result = self.hanged_man_game.guess_word(guess)

@@ -1,8 +1,6 @@
 #:kivy 2.1.0
 
 <MyRoot>:
-    user_name_input: user_name_input
-    user_name_submit: user_name_submit
     hidden_word: hidden_word
     guess_input: guess_input
     guess_submit: guess_submit
@@ -31,20 +29,6 @@
             halign: 'center'
 
         TextInput:
-            name: "userNameInput"
-            id: user_name_input
-            multiline: False
-            on_text_validate: root.get_user_name(self, user_name_submit)
-
-        Button:
-            name: "userNameSubmit"
-            id: user_name_submit
-            text: "Submit"
-            font_size: 15
-            # Event managing
-            on_press: root.get_user_name(user_name_input, self)
-        
-        TextInput:
             name: "guessInput"
             id: guess_input
             opacity: 0
@@ -71,17 +55,4 @@
             id: new_game
             text: "New game"
             font_size: 15
-            opacity: 0
-            disabled: True
-            height: 0
-            size_hint_y: None
             on_press: root.start_game()
-
-#:import Factory kivy.factory.Factory
-<AskUserName@Popup>:
-    auto_dismiss: False
-
-    Button:
-        text: "OK"
-        on_press: root.user_input(user_name_input)
-        on_release: root.dismiss()
